@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>Detection Gender System</title>
+
+
+    <link rel="icon" type="image/png" sizes="192x192" href="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <link rel="manifest" href="{% static 'assets/favicon/manifest.json' %}">
+
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendors styles-->
+    <link rel="stylesheet" href="{% static 'vendors/simplebar/css/simplebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/simplebar.css' %}">
+    <!-- Main styles for this application-->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!-- We use those styles to show code examples, you should remove them in your application.-->
+    <link href="{% static 'css/examples.css' %}" rel="stylesheet">
+    <link href="{% static 'vendors/@coreui/chartjs/css/coreui-chartjs.css' %}" rel="stylesheet">
+    <!-- Include Font Awesome for the icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .sidebar-dark {
+            background-color: darkslateblue;
+        }
+    </style>
+
+    <style>
+        .card-activity {
+            max-height: 500px;
+            min-height: 500px;
+            overflow-y: scroll;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- sidebar -->
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+        <div class="sidebar-brand d-none d-md-flex">
+            <i class="fa fa-venus-mars" style="margin-right: 10px;"></i> Gender Detection System
+        </div>
+        <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
+            <li class="nav-item">
+                <a class="nav-link active" href="/">Dashboard</a>
+            </li>
+            <li class="nav-title">ACTION</li>
+            <li class="nav-item">
+                <a class="nav-link ps-5" href="/training-data">Training</a>
+                <a class="nav-link ps-5" href="/detection">Detection</a>
+                <a class="nav-link ps-5" href="/ofwan">Sofwan</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+        <header class="header header-sticky mb-4">
+            <div class="container-fluid">
+                <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
+          </button>
+                <a class="header-brand d-md-none" href="#"></a>
+                <ul class="header-nav ms-3">
+                </ul>
+            </div>
+            <div class="header-divider"></div>
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb my-0 ms-2">
+                        <li class="breadcrumb-item">
+                            <span>Home</span>
+                        </li>
+                        <li class="breadcrumb-item active"><span>Dashboard</span></li>
+                    </ol>
+                </nav>
+            </div>
+        </header>
+        <div class="body flex-grow-1 px-3">
+            <div class="container">
+                <div class="card p-3">
+                    <h5>Gender detection with face</h5>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <div class="card p-3 mt-3">
+                            <video id="webcam" autoplay></video>
+                            <img id="capturedImage" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card card-activity p-3 mt-3" id="result-container">
+                            <p>Detection log</p>
+                            <div class="table-responsive">
+                                <table class="table" id="activity-table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Keterangan</th>
+                                            <!-- Tambahkan kolom-kolom lain sesuai kebutuhan -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body">
+                                        <!-- Data akan ditambahkan ke sini secara dinamis -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- CoreUI and necessary plugins-->
+    <script src="{% static 'vendors/@coreui/coreui/js/coreui.bundle.min.js' %} "></script>
+    <script src="{% static 'vendors/simplebar/js/simplebar.min.js' %} "></script>
+
+    <script>
+        const videoElement = document.getElementById('webcam');
+        const capturedImage = document.getElementById('capturedImage');
+        const tableBody = document.getElementById('table-body');
+
+        let stream;
+        let imageCaptured = false;
+
+        // Get user media (video stream)
+        navigator.mediaDevices.getUserMedia({
+                video: true
+            })
+            .then(videoStream => {
+                stream = videoStream;
+                videoElement.srcObject = videoStream;
+            })
+            .catch(error => {
+                console.error('Error accessing camera:', error);
+            });
+
+        // Fungsi untuk memeriksa apakah dataArray adalah objek dengan properti 'success' set false dan properti 'message' yang sesuai
+        function isArrayWithErrorMessage(dataArray) {
+            return Array.isArray(dataArray) && dataArray.length === 1 && dataArray[0].success === false && dataArray[0].message;
+        }
+
+        // Function to capture a frame from the video and send it
+        function captureAndSendImage() {
+            if (stream) {
+                const canvas = document.createElement('canvas');
+                const canvasContext = canvas.getContext('2d');
+                canvas.width = videoElement.videoWidth;
+                canvas.height = videoElement.videoHeight;
+                canvasContext.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                const imageDataURL = canvas.toDataURL('image/jpeg');
+                capturedImage.src = imageDataURL;
+                imageCaptured = true;
+
+                var csrfToken = '{{ csrf }}';
+
+                if (imageCaptured) {
+                    const imageDataURL = capturedImage.src;
+                    fetch('http://127.0.0.1:8000/recognize/', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrfToken,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                frame: imageDataURL,
+                            }),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Periksa apakah data yang diterima adalah objek
+                            if (data.gender['success'] === false) {
+                                // Objek diterima, lewati pemrosesan ke tabel
+                                console.log('Received object response:', data);
+                            } else {
+                                // Tambahkan data baru ke tabel di bagian atas
+                                const newRow = tableBody.insertRow(0);
+                                const cellNo = newRow.insertCell(0);
+                                const cellNIP = newRow.insertCell(1);
+
+                                // Tambahkan data ke sel-sel tabel
+                                cellNo.innerHTML = tableBody.children.length; // Nomor urut
+
+                                if (typeof data.gender === 'string' && data.gender.toLowerCase().includes('pulang')) {
+                                    // Jika ya, beri style teks berwarna merah
+                                    cellNIP.style.color = 'red';
+                                }
+
+                                cellNIP.innerHTML = data.gender; // Data NIP
+                                // Anda dapat menambahkan kolom-kolom lain sesuai kebutuhan
+
+                                // Uncomment baris di bawah ini jika Anda ingin menampilkan data di console
+                                console.log(data);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Fetch error:', error);
+                        });
+                }
+            }
+        }
+
+        // Capture and send the image at regular intervals (e.g., every 5000 milliseconds)
+        setInterval(captureAndSendImage, 3000);
+    </script>
+
+</body>
+
+</html>

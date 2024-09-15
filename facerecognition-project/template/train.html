@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>Detection Gender System</title>
+
+    <link rel="icon" type="image/png" sizes="192x192" href="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <link rel="manifest" href="{% static 'assets/favicon/manifest.json' %}">
+
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="https://cdn-icons-png.flaticon.com/512/9812/9812439.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendors styles-->
+    <link rel="stylesheet" href="{% static 'vendors/simplebar/css/simplebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/simplebar.css' %}">
+    <!-- Main styles for this application-->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!-- We use those styles to show code examples, you should remove them in your application.-->
+    <link href="{% static 'css/examples.css' %}" rel="stylesheet">
+    <link href="{% static 'vendors/@coreui/chartjs/css/coreui-chartjs.css' %}" rel="stylesheet">
+    <!-- Include Font Awesome for the icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .sidebar-dark {
+            background-color: darkslateblue;
+        }
+    </style>
+
+    <style>
+        .card-activity {
+            max-height: 500px;
+            min-height: 500px;
+            overflow-y: scroll;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Include Font Awesome for the icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- sidebar -->
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+        <div class="sidebar-brand d-none d-md-flex">
+            <i class="fa fa-venus-mars" style="margin-right: 10px;"></i> Gender Detection System
+        </div>
+        <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
+            <li class="nav-item">
+                <a class="nav-link active" href="/">Dashboard</a>
+            </li>
+            <li class="nav-title">ACTION</li>
+            <li class="nav-item">
+                <a class="nav-link ps-5" href="/training-data">Training</a>
+                <a class="nav-link ps-5" href="/detection">Detection</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+        <header class="header header-sticky mb-4">
+            <div class="container-fluid">
+                <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
+          </button>
+                <a class="header-brand d-md-none" href="#"></a>
+                <ul class="header-nav ms-3">
+                </ul>
+            </div>
+            <div class="header-divider"></div>
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb my-0 ms-2">
+                        <li class="breadcrumb-item">
+                            <span>Home</span>
+                        </li>
+                        <li class="breadcrumb-item active"><span>Dashboard</span></li>
+                    </ol>
+                </nav>
+            </div>
+        </header>
+        <div class="body flex-grow-1 px-3">
+            <div class="container">
+                <div class="card p-3">
+                    <h5>Laman Training Data</h5>
+                    <p>Data gambar yang dimiliki untuk dilakukan proses training adalah sebanyak 100 foto, dengan pembagian porsi 50 untuk jenis kelamin laki-laki dan 50 untuk jenis kelamin perempuan. Algotirma yang digunakan untuk melakukan proses training
+                        adalah CNN (Convolutional Neural Network). Klik <strong>Train the images</strong> untuk menjalankan proses training.
+                    </p>
+                    <a href="/train" class="btn btn-primary w-100">Train the images</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- CoreUI and necessary plugins-->
+    <script src="{% static 'vendors/@coreui/coreui/js/coreui.bundle.min.js' %} "></script>
+    <script src="{% static 'vendors/simplebar/js/simplebar.min.js' %} "></script>
+</body>
+
+</html>
